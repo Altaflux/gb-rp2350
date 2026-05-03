@@ -219,7 +219,7 @@ fn main() -> ! {
     let spi = spi.init(
         &mut pac.RESETS,
         clocks.peripheral_clock.freq(),
-        400.kHz(),
+        200.kHz(),
         embedded_hal::spi::MODE_0,
     );
 
