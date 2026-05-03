@@ -153,7 +153,7 @@ where
                 let tx = self.tx.take().unwrap();
                 let tx = self
                     .streamer
-                    .stream_16b(tx, &mut slice.iter().cloned(), u16::to_be);
+                    .stream_16b(tx, &mut slice.iter().cloned(), |d| d);
                 self.tx = Some(tx);
                 Ok(())
             }
@@ -162,7 +162,7 @@ where
                 let tx = self.tx.take().unwrap();
                 let tx = self
                     .streamer
-                    .stream_16b(tx, &mut slice.iter().cloned(), u16::to_le);
+                    .stream_16b(tx, &mut slice.iter().cloned(), |d| d);
                 self.tx = Some(tx);
                 Ok(())
             }
@@ -176,14 +176,14 @@ where
             DataFormat::U16BEIter(iter) => {
                 self.set_16bit_mode();
                 let tx = self.tx.take().unwrap();
-                let tx = self.streamer.stream_16b(tx, iter, u16::to_be);
+                let tx = self.streamer.stream_16b(tx, iter, |d| d);
                 self.tx = Some(tx);
                 Ok(())
             }
             DataFormat::U16LEIter(iter) => {
                 self.set_16bit_mode();
                 let tx = self.tx.take().unwrap();
-                let tx = self.streamer.stream_16b(tx, iter, u16::to_le);
+                let tx = self.streamer.stream_16b(tx, iter, |d| d);
                 self.tx = Some(tx);
                 Ok(())
             }

@@ -50,8 +50,6 @@ where
             LimitingArrayReadTarget::new(buffer, 0),
             tx,
         );
-        cfg.bswap(true);
-
         Self {
             dma: (Some(DmaState::IDLE(cfg.start()))),
             second_buffer: Some(LimitingArrayReadTarget::new(buffer2, 0)),

@@ -219,7 +219,7 @@ where
                 half_byte_sm.tx = self.streamer.stream_16b(
                     half_byte_sm.tx,
                     &mut (slice.iter().cloned()),
-                    u16::to_le,
+                    |d| d,
                 );
                 self.mode = Some(PioMode::HalfWordMode((byte_sm, half_byte_sm)));
                 Ok(())
@@ -230,7 +230,7 @@ where
                 half_byte_sm.tx = self.streamer.stream_16b(
                     half_byte_sm.tx,
                     &mut (slice.iter().cloned()),
-                    u16::to_be,
+                    |d| d,
                 );
                 self.mode = Some(PioMode::HalfWordMode((byte_sm, half_byte_sm)));
                 Ok(())
@@ -246,7 +246,7 @@ where
             DataFormat::U16LEIter(iter) => {
                 let pio_mode = core::mem::replace(&mut self.mode, None).unwrap();
                 let (byte_sm, mut half_byte_sm) = Self::set_16bit_mode(pio_mode);
-                half_byte_sm.tx = self.streamer.stream_16b(half_byte_sm.tx, iter, u16::to_le);
+                half_byte_sm.tx = self.streamer.stream_16b(half_byte_sm.tx, iter, |d| d);
                 self.mode = Some(PioMode::HalfWordMode((byte_sm, half_byte_sm)));
 
                 Ok(())
@@ -254,7 +254,7 @@ where
             DataFormat::U16BEIter(iter) => {
                 let pio_mode = core::mem::replace(&mut self.mode, None).unwrap();
                 let (byte_sm, mut half_byte_sm) = Self::set_16bit_mode(pio_mode);
-                half_byte_sm.tx = self.streamer.stream_16b(half_byte_sm.tx, iter, u16::to_be);
+                half_byte_sm.tx = self.streamer.stream_16b(half_byte_sm.tx, iter, |d| d);
                 self.mode = Some(PioMode::HalfWordMode((byte_sm, half_byte_sm)));
 
                 Ok(())
