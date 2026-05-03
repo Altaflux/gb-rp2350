@@ -34,7 +34,7 @@ Pending Features:
 * UP = GP21
 * DOWN = GP19
 * LEFT = GP20
-* RIGHT = GP10
+* RIGHT = GP18
 * BUTTON A = GP17
 * BUTTON B = GP16
 * SELECT = GP22
