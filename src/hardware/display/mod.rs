@@ -4,9 +4,6 @@ mod parallel_8bit_interface;
 mod scaler;
 mod spi_pio_interface;
 
-mod ili9488;
-pub use ili9488::ILI9488Rgb565;
-
 pub use dma_streamer::DmaStreamer;
 use dma_transfer::DmaTransfer;
 #[allow(unused_imports)]
