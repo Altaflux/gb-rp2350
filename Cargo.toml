@@ -21,8 +21,8 @@ version = "0.1.0"
 [dependencies]
 byte-slice-cast = { version = "1.2.2", default-features = false }
 display-interface = "0.5"
-embedded-graphics-core = "0.4.0"
-embedded-graphics = "0.8.1"
+embedded-graphics-core = "0.4.1"
+embedded-graphics = "0.8.2"
 display-interface-spi = "0.5.0"
 mipidsi = { version = "0.8.0", default-features = false }
 gb-core = { git = "https://github.com/Altaflux/rust-gb.git", rev = "0504e7964eda437ccfdac72144db03d579d84eed", default-features = false }
@@ -34,7 +34,7 @@ portable-atomic = { version = "1.9.0", features = ["critical-section"] }
 num-traits = { version = "0.2.19", default-features = false, features = [
     "libm",
 ] }
-cortex-m = { version = "0.7.2" }
+cortex-m = { version = "0.7.7" }
 cortex-m-rt = "0.7.5"
 critical-section = { version = "1.2.0" }
 defmt = "1.1.0"
@@ -59,7 +59,7 @@ rp235x-hal = { version = "0.4.0", features = [
 
 defmt-serial = "0.13.0"
 static_cell = "2.1.0"
-panic-probe = { version = "0.3.2", features = ["defmt", "print-defmt"] }
+panic-probe = { version = "1.0.0", features = ["defmt", "print-defmt"] }
 const_env = "0.1.2"
 
 [build-dependencies]
