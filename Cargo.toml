@@ -40,7 +40,7 @@ critical-section = { version = "1.2.0" }
 defmt = "1.1.0"
 
 embedded-sdmmc = { git="https://github.com/rust-embedded-community/embedded-sdmmc-rs.git", rev="f2b41b92269ccfcba9b2926cf1221d201ec55887", features = [], default-features = false }
-embedded-alloc = "0.6.0"
+embedded-alloc = "0.7.0"
 embedded-hal = "1.0.0"
 embedded-hal-async = "1.0.0"
 embedded-dma = "0.2.0"
@@ -48,16 +48,16 @@ paste = "1.0.15"
 const-lru = "1.0.0"
 fugit = "0.3.6"
 
-pio = "0.2.0"
-pio-proc = "0.2.0"
-rp235x-hal = { git = "https://github.com/rp-rs/rp-hal.git", rev = "e78fa4c0661910f71e0eb5f4a370f20b1ed2cacb", features = [
+pio = "0.3.0"
+
+rp235x-hal = { version = "0.4.0", features = [
     "binary-info",
     "critical-section-impl",
     "rt",
     "defmt",
 ] }
 
-defmt-serial = "0.10.0"
+defmt-serial = "0.13.0"
 static_cell = "2.1.0"
 panic-probe = { version = "0.3.2", features = ["defmt", "print-defmt"] }
 const_env = "0.1.2"

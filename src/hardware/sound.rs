@@ -51,7 +51,7 @@ where
         P: PIOExt,
         SM: StateMachineIndex,
     {
-        let audio_program = pio_proc::pio_asm!(
+        let audio_program = pio::pio_asm!(
             ".side_set 2",
             "    set x, 14          side 0b01", // side 0bWB - W = Word Clock, B = Bit Clock
             "left_data:",

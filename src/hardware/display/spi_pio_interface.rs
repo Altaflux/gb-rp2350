@@ -72,7 +72,8 @@ where
         timer: crate::hal::Timer<TD>,
     ) -> Self {
         let video_program =
-            pio_proc::pio_asm!(".side_set 1 ", "out pins, 1 side 0 ", "nop side 1",);
+       
+        pio::pio_asm!(".side_set 1 ", "out pins, 1 side 0 ", "nop side 1",);
 
         let video_program_installed = pio.install(&video_program.program).unwrap();
         let (mut sm_8b, rx_8b, tx_8b) =

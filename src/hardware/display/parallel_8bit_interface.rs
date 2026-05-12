@@ -42,7 +42,7 @@ where
         streamer: DmaStreamer<CH1, CH2>,
         timer: crate::hal::Timer<TD>,
     ) -> Self {
-        let video_program = pio_proc::pio_asm!(
+        let video_program = pio::pio_asm!(
             ".side_set 1 opt",
             "jmp start_8 side 1",
             ".wrap_target"
