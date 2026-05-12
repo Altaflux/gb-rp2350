@@ -509,7 +509,10 @@ fn load_rom<
     device_reset: DR,
 ) -> Box<dyn Cartridge + 'a> {
     use hardware::flash::FLASH_SECTOR_SIZE;
-    device_reset(volume_manager.device());
+
+    volume_manager.device(|db| {
+        device_reset(db);
+    });
     let mut volume = volume_manager
         .open_volume(embedded_sdmmc::VolumeIdx(0))
         .unwrap();
@@ -661,7 +664,9 @@ fn load_rom_to_psram<
     device_reset: DR,
 ) -> Box<dyn Cartridge + 'a> {
     pub const ROM_READ_BUFFER_SIZE: u32 = 4096 * 4;
-    device_reset(volume_manager.device());
+    volume_manager.device(|db| {
+        device_reset(db);
+    });
     let mut volume = volume_manager
         .open_volume(embedded_sdmmc::VolumeIdx(0))
         .unwrap();

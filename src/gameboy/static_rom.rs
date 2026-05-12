@@ -55,11 +55,13 @@ impl<
         info!("Saving ram bank: {}", bank_index);
         self.timer.delay_ms(10);
 
-        let mut volume_manager = self.volume_manager.borrow_mut();
-        (self.device_reset)(volume_manager.device());
+        let volume_manager = self.volume_manager.borrow_mut();
+        volume_manager.device(|d| {
+            (self.device_reset)(d);
+        });
 
-        let mut volume = volume_manager.open_volume(embedded_sdmmc::VolumeIdx(0))?;
-        let mut root_directory = volume.open_root_dir()?;
+        let volume = volume_manager.open_volume(embedded_sdmmc::VolumeIdx(0))?;
+        let root_directory = volume.open_root_dir()?;
 
         if root_directory.find_directory_entry("saves").is_err() {
             root_directory.make_dir_in_dir("saves")?;
@@ -67,16 +69,16 @@ impl<
         let mut game_dir_name = game_title.replace(" ", "").to_lowercase();
         game_dir_name.truncate(game_dir_name.len().min(8));
 
-        let mut save_directory = root_directory.open_dir("saves")?;
+        let save_directory = root_directory.open_dir("saves")?;
         if save_directory
             .find_directory_entry(game_dir_name.as_str())
             .is_err()
         {
             save_directory.make_dir_in_dir(game_dir_name.as_str())?;
         }
-        let mut game_directory = save_directory.open_dir(game_dir_name.as_str())?;
+        let game_directory = save_directory.open_dir(game_dir_name.as_str())?;
 
-        let mut bank_file = game_directory.open_file_in_dir(
+        let bank_file = game_directory.open_file_in_dir(
             alloc::format!("{}", bank_index).as_str(),
             embedded_sdmmc::Mode::ReadWriteCreateOrTruncate,
         )?;
@@ -131,13 +133,16 @@ impl<
     fn load_to_bank(&mut self, game_title: &str, bank_index: u8, bank: &mut [u8]) {
         info!("Loading ram bank: {}", bank_index);
         self.timer.delay_ms(10);
-        let mut volume_manager = self.volume_manager.borrow_mut();
-        (self.device_reset)(volume_manager.device());
+        let volume_manager = self.volume_manager.borrow_mut();
+        volume_manager.device(|d| {
+            (self.device_reset)(d);
+        });
+        
 
-        let mut volume = volume_manager
+        let volume = volume_manager
             .open_volume(embedded_sdmmc::VolumeIdx(0))
             .unwrap();
-        let mut root_directory = volume.open_root_dir().unwrap();
+        let root_directory = volume.open_root_dir().unwrap();
 
         if root_directory.find_directory_entry("saves").is_err() {
             root_directory.make_dir_in_dir("saves").unwrap();
@@ -154,14 +159,14 @@ impl<
                 .make_dir_in_dir(game_dir_name.as_str())
                 .unwrap();
         }
-        let mut game_directory = save_directory.open_dir(game_dir_name.as_str()).unwrap();
+        let game_directory = save_directory.open_dir(game_dir_name.as_str()).unwrap();
 
         let bank_name = alloc::format!("{}", bank_index);
         if game_directory
             .find_directory_entry(bank_name.as_str())
             .is_ok()
         {
-            let mut bank_file = game_directory
+            let bank_file = game_directory
                 .open_file_in_dir(bank_name.as_str(), embedded_sdmmc::Mode::ReadOnly)
                 .unwrap();
 

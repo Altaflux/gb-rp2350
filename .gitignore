@@ -5,3 +5,5 @@ Cargo.lock
 *.orig
 .env
 custom_mapping.env
+gb-rp2350.uf2
+picotool

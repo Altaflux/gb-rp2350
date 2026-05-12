@@ -26,8 +26,8 @@ embedded-graphics = "0.8.1"
 display-interface-spi = "0.5.0"
 mipidsi = { version = "0.8.0", default-features = false }
 gb-core = { git = "https://github.com/Altaflux/rust-gb.git", rev = "0504e7964eda437ccfdac72144db03d579d84eed", default-features = false }
-embedded-hal-bus = { version = "0.2.0", features = ["defmt-03"] }
-embedded-io = "0.6.1"
+embedded-hal-bus = { version = "0.3.0", features = ["defmt-03"] }
+embedded-io = "0.7.1"
 # We aren't using this, but embedded-hal-bus 0.2 unconditionally requires atomics.
 # Should be fixed in e-h-b 0.3 via https://github.com/rust-embedded/embedded-hal/pull/607
 portable-atomic = { version = "1.9.0", features = ["critical-section"] }
@@ -37,11 +37,9 @@ num-traits = { version = "0.2.19", default-features = false, features = [
 cortex-m = { version = "0.7.2" }
 cortex-m-rt = "0.7.5"
 critical-section = { version = "1.2.0" }
-defmt = "0.3.10"
+defmt = "1.1.0"
 
-embedded-sdmmc = { version = "0.8.1", features = [
-    # "defmt-log",
-], default-features = false }
+embedded-sdmmc = { git="https://github.com/rust-embedded-community/embedded-sdmmc-rs.git", rev="f2b41b92269ccfcba9b2926cf1221d201ec55887", features = [], default-features = false }
 embedded-alloc = "0.6.0"
 embedded-hal = "1.0.0"
 embedded-hal-async = "1.0.0"
