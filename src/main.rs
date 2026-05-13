@@ -15,7 +15,6 @@ use alloc::rc::Rc;
 use alloc::string::{String, ToString};
 use core::cell::RefCell;
 
-use display_interface::WriteOnlyDataCommand;
 
 use embedded_graphics::pixelcolor::Rgb565;
 use embedded_graphics::prelude::*;
@@ -28,6 +27,7 @@ use embedded_sdmmc::sdcard::AcquireOpts;
 use gb_core::hardware::boot_rom::Bootrom;
 use gb_core::hardware::cartridge::Cartridge;
 use mipidsi::models::Model;
+
 use mipidsi::options::{Orientation, Rotation};
 use mipidsi::Display;
 use panic_probe as _;
@@ -431,7 +431,8 @@ pub fn run_game_boy<'a, D: TimerDevice, DI, M, RST, BH: GameboyButtonHandler<'a>
     mut button_handler: BH,
     timer: crate::hal::Timer<D>,
 ) where
-    DI: WriteOnlyDataCommand,
+    Rgb565: mipidsi::interface::InterfacePixelFormat<DI::Word>,
+    DI: mipidsi::interface::Interface,
     M: Model<ColorFormat = Rgb565>,
     RST: OutputPin,
 {

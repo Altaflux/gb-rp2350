@@ -71,9 +71,7 @@ where
         streamer: DmaStreamer<CH1, CH2>,
         timer: crate::hal::Timer<TD>,
     ) -> Self {
-        let video_program =
-       
-        pio::pio_asm!(".side_set 1 ", "out pins, 1 side 0 ", "nop side 1",);
+        let video_program = pio::pio_asm!(".side_set 1 ", "out pins, 1 side 0 ", "nop side 1",);
 
         let video_program_installed = pio.install(&video_program.program).unwrap();
         let (mut sm_8b, rx_8b, tx_8b) =
@@ -217,22 +215,18 @@ where
             DataFormat::U16LE(slice) => {
                 let pio_mode = core::mem::replace(&mut self.mode, None).unwrap();
                 let (byte_sm, mut half_byte_sm) = Self::set_16bit_mode(pio_mode);
-                half_byte_sm.tx = self.streamer.stream_16b(
-                    half_byte_sm.tx,
-                    &mut (slice.iter().cloned()),
-                    |d| d,
-                );
+                half_byte_sm.tx =
+                    self.streamer
+                        .stream_16b(half_byte_sm.tx, &mut (slice.iter().cloned()), |d| d);
                 self.mode = Some(PioMode::HalfWordMode((byte_sm, half_byte_sm)));
                 Ok(())
             }
             DataFormat::U16BE(slice) => {
                 let pio_mode = core::mem::replace(&mut self.mode, None).unwrap();
                 let (byte_sm, mut half_byte_sm) = Self::set_16bit_mode(pio_mode);
-                half_byte_sm.tx = self.streamer.stream_16b(
-                    half_byte_sm.tx,
-                    &mut (slice.iter().cloned()),
-                    |d| d,
-                );
+                half_byte_sm.tx =
+                    self.streamer
+                        .stream_16b(half_byte_sm.tx, &mut (slice.iter().cloned()), |d| d);
                 self.mode = Some(PioMode::HalfWordMode((byte_sm, half_byte_sm)));
                 Ok(())
             }
@@ -262,6 +256,61 @@ where
             }
             _ => Err(DisplayError::DataFormatNotImplemented),
         }
+    }
+}
+
+impl<RS, P, SM1, SM2, CH1: SingleChannel, CH2: SingleChannel, TD: TimerDevice>
+    mipidsi::interface::Interface for SpiPioDmaInterface<RS, P, SM1, SM2, CH1, CH2, TD>
+where
+    P: PIOExt,
+    SM1: StateMachineIndex,
+    SM2: StateMachineIndex,
+    RS: OutputPin,
+{
+    type Word = u8;
+    type Error = DisplayError;
+
+    const KIND: mipidsi::interface::InterfaceKind = mipidsi::interface::InterfaceKind::Serial4Line;
+
+    fn send_command(&mut self, command: u8, args: &[u8]) -> Result {
+        while !self.is_idle() {
+            crate::hal::arch::nop();
+        }
+        self.rs.set_low().map_err(|_| DisplayError::RSError)?;
+        self.timer.delay_ns(9000);
+        self.send_data(DataFormat::U8(
+            core::slice::from_ref(&command)
+        ))?;
+        self.rs.set_high().map_err(|_| DisplayError::RSError)?;
+        self.timer.delay_ns(9000);
+        self.send_data(DataFormat::U8(args))?;
+        Ok(())
+    }
+
+    fn send_pixels<const N: usize>(
+        &mut self,
+        pixels: impl IntoIterator<Item = [Self::Word; N]>,
+    ) -> Result {
+        while !self.is_idle() {
+            crate::hal::arch::nop();
+        }
+        self.rs.set_high().map_err(|_| DisplayError::RSError)?;
+        self.timer.delay_ns(9000);
+
+
+        let arrays = pixels.into_iter();
+        for chunk in arrays {
+            self.send_data(DataFormat::U8(&chunk))?;
+        }
+        Ok(())
+    }
+
+    fn send_repeated_pixel<const N: usize>(
+        &mut self,
+        pixel: [Self::Word; N],
+        count: u32,
+    ) -> Result {
+        self.send_pixels((0..count).map(|_| pixel))
     }
 }
 
