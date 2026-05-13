@@ -297,11 +297,7 @@ where
         self.rs.set_high().map_err(|_| DisplayError::RSError)?;
         self.timer.delay_ns(9000);
 
-
-        let arrays = pixels.into_iter();
-        for chunk in arrays {
-            self.send_data(DataFormat::U8(&chunk))?;
-        }
+        self.send_data(DataFormat::U8Iter(&mut pixels.into_iter().flatten()))?;
         Ok(())
     }
 
